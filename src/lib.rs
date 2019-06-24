@@ -6,5 +6,5 @@ mod sys;
 mod events;
 mod spotify;
 
-pub use spotify::{Spotify, State, SpotifyTrack};
 pub use events::EventBuildError;
+pub use spotify::{Spotify, SpotifyTrack, State};

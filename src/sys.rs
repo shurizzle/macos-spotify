@@ -4,7 +4,7 @@
 
 use libc::{c_char, c_long, c_short};
 pub use libc::{c_void, strlen};
-use std::{fmt, slice, str};
+use std::{fmt, str};
 
 pub type OSStatus = i32;
 pub type OSErr = c_short;
@@ -36,17 +36,17 @@ impl ResType {
         ResType(value)
     }
 
-    #[cfg(target_endian = "little")]
-    pub fn to_string(&self) -> String {
-        let s =
-            unsafe { slice::from_raw_parts(&self.0.swap_bytes() as *const u32 as *const u8, 4) };
-        str::from_utf8(s).unwrap().to_string()
+    pub fn to_vec(&self) -> Vec<u8> {
+        vec![
+            (self.0 >> 24) as u8,
+            (self.0 >> 16) as u8,
+            (self.0 >> 8) as u8,
+            self.0 as u8,
+        ]
     }
 
-    #[cfg(target_endian = "big")]
     pub fn to_string(&self) -> String {
-        let s = unsafe { slice::from_raw_parts(&self.0 as *const u32 as *const u8, 4) };
-        str::from_utf8(s).unwrap().to_string()
+        unsafe { String::from_utf8_unchecked(self.to_vec()) }
     }
 
     pub fn to_int(&self) -> u32 {
