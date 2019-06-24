@@ -1,0 +1,13 @@
+[package]
+name = "macos-spotify"
+version = "0.0.1"
+description = "Query and controlling Spotify via Apple Events"
+homepage = "https://github.com/shurizzle/rust-macos-spotify"
+repository = "https://github.com/shurizzle/rust-macos-spotify"
+license-file = "LICENSE"
+authors = ["Domenico Shura <shura1991@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+libc = "0.2.58"
+encoding = "0.2.33"
