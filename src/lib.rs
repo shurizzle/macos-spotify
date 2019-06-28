@@ -1,6 +1,8 @@
+extern crate four_char_code;
 extern crate encoding;
 extern crate libc;
 
+#[macro_use]
 mod sys;
 #[macro_use]
 mod events;

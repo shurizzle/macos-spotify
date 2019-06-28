@@ -1,6 +1,6 @@
 use crate::events::{
     AEDesc, AutoPropertyType, EventEnum, EventPropertyReader, EventedObject, EventedRootObject,
-    EventedSubObject, ResType,
+    EventedSubObject, ResType
 };
 use libc::c_char;
 use std::io::Result;
@@ -40,37 +40,37 @@ impl AutoPropertyType for State {
     }
 }
 
-pub const SIGNATURE: ResType = ResType(0x73706679);
+pub const SIGNATURE: ResType = res_type!("spfy");
 pub const BUNDLE_ID: *const c_char = b"com.spotify.client\0" as *const u8 as *const c_char;
-pub const EVENT_ID_PLAYPAUSE: ResType = ResType(0x506c5073);
-pub const EVENT_ID_PLAY: ResType = ResType(0x506c6179);
-pub const EVENT_ID_PAUSE: ResType = ResType(0x50617573);
-pub const EVENT_ID_NEXT: ResType = ResType(0x4e657874);
-pub const EVENT_ID_PREVIOUS: ResType = ResType(0x50726576);
-pub const EVENT_ID_PLAY_TRACK: ResType = ResType(0x50437478);
+pub const EVENT_ID_PLAYPAUSE: ResType = res_type!("PlPs");
+pub const EVENT_ID_PLAY: ResType = res_type!("Play");
+pub const EVENT_ID_PAUSE: ResType = res_type!("Paus");
+pub const EVENT_ID_NEXT: ResType = res_type!("Next");
+pub const EVENT_ID_PREVIOUS: ResType = res_type!("Prev");
+pub const EVENT_ID_PLAY_TRACK: ResType = res_type!("PCtx");
 
-pub const KEY_CONTEXT: ResType = ResType(0x636f7478);
+pub const KEY_CONTEXT: ResType = res_type!("cotx");
 
-pub const PROPERTY_STATE: ResType = ResType(0x70506c53);
-pub const PROPERTY_SHUFFLING: ResType = ResType(0x70536875);
-pub const PROPERTY_REPEATING: ResType = ResType(0x70526570);
-pub const PROPERTY_POSITION: ResType = ResType(0x70506f73);
-pub const PROPERTY_VOLUME: ResType = ResType(0x70566f6c);
-pub const PROPERTY_TRACK: ResType = ResType(0x7054726b);
-pub const PROPERTY_ARTIST: ResType = ResType(0x70417274);
-pub const PROPERTY_ID: ResType = ResType(0x49442020);
-pub const PROPERTY_NAME: ResType = ResType(0x706e616d);
-pub const PROPERTY_ALBUM: ResType = ResType(0x70416c62);
-pub const PROPERTY_ALBUM_ARTIST: ResType = ResType(0x70416c41);
-// pub const PROPERTY_ARTWORK: ResType = ResType(0x7441776b);
-pub const PROPERTY_ARTWORK_URL: ResType = ResType(0x6155726c);
-pub const PROPERTY_DISK_NUMBER: ResType = ResType(0x7044734e);
-pub const PROPERTY_DURATION: ResType = ResType(0x70447572);
-pub const PROPERTY_PLAYED_COUNT: ResType = ResType(0x70506c43);
-pub const PROPERTY_POPULARITY: ResType = ResType(0x7370506f);
-pub const PROPERTY_SPOTIFY_URL: ResType = ResType(0x73707572);
-pub const PROPERTY_STARRED: ResType = ResType(0x73705374);
-pub const PROPERTY_TRACK_NUMBER: ResType = ResType(0x7054724e);
+pub const PROPERTY_STATE: ResType = res_type!("pPlS");
+pub const PROPERTY_SHUFFLING: ResType = res_type!("pShu");
+pub const PROPERTY_REPEATING: ResType = res_type!("pRep");
+pub const PROPERTY_POSITION: ResType = res_type!("pPos");
+pub const PROPERTY_VOLUME: ResType = res_type!("pVol");
+pub const PROPERTY_TRACK: ResType = res_type!("pTrk");
+pub const PROPERTY_ARTIST: ResType = res_type!("pArt");
+pub const PROPERTY_ID: ResType = res_type!("ID  ");
+pub const PROPERTY_NAME: ResType = res_type!("pnam");
+pub const PROPERTY_ALBUM: ResType = res_type!("pAlb");
+pub const PROPERTY_ALBUM_ARTIST: ResType = res_type!("pAlA");
+// pub const PROPERTY_ARTWORK: ResType = res_type!("tAwk");
+pub const PROPERTY_ARTWORK_URL: ResType = res_type!("aUrl");
+pub const PROPERTY_DISK_NUMBER: ResType = res_type!("pDsN");
+pub const PROPERTY_DURATION: ResType = res_type!("pDur");
+pub const PROPERTY_PLAYED_COUNT: ResType = res_type!("pPlC");
+pub const PROPERTY_POPULARITY: ResType = res_type!("spPo");
+pub const PROPERTY_SPOTIFY_URL: ResType = res_type!("spur");
+pub const PROPERTY_STARRED: ResType = res_type!("spSt");
+pub const PROPERTY_TRACK_NUMBER: ResType = res_type!("pTrN");
 
 pub struct SpotifyTrack {
     signature: ResType,

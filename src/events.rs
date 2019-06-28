@@ -182,7 +182,7 @@ pub trait EventEnum: Sized + Copy + Into<u32> {
     fn from_int(value: u32) -> Self;
 
     fn from_res_type(res_type: ResType) -> Self {
-        EventEnum::from_int(res_type.to_int())
+        EventEnum::from_int(res_type.to_u32())
     }
 
     fn to_int(self) -> u32 {
@@ -190,7 +190,7 @@ pub trait EventEnum: Sized + Copy + Into<u32> {
     }
 
     fn to_res_type(self) -> ResType {
-        ResType(EventEnum::to_int(self))
+        ResType::new(EventEnum::to_int(self))
     }
 
     fn read(reader: EventPropertyReader) -> Result<Option<Self>> {

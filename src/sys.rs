@@ -4,57 +4,37 @@
 
 use libc::{c_char, c_long, c_short};
 pub use libc::{c_void, strlen};
-use std::{fmt, str};
+use std::fmt;
+
+pub use four_char_code::*;
 
 pub type OSStatus = i32;
 pub type OSErr = c_short;
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 #[repr(C)]
-pub struct ResType(pub u32);
+pub struct ResType(pub FourCharCode);
 pub type AEEventID = ResType;
 pub type AEEventClass = ResType;
 pub type DescType = ResType;
 pub type AEKeyword = ResType;
 
 impl ResType {
-    pub fn new(value: &str) -> ResType {
-        ResType::from_str(value)
+    #[inline]
+    pub fn new(value: u32) -> ResType {
+        ResType(FourCharCode::new(value))
     }
 
-    pub fn from_str(value: &str) -> ResType {
-        if !value.is_ascii() || value.len() != 4 {
-            panic!(
-                "ResType value must be a String of 4 ASCII characters, {} given.",
-                value
-            );
-        }
-
-        ResType::from_int(unsafe { *(value.as_ptr() as *const u32) })
-    }
-
-    pub fn from_int(value: u32) -> ResType {
-        ResType(value)
-    }
-
-    pub fn to_vec(&self) -> Vec<u8> {
-        vec![
-            (self.0 >> 24) as u8,
-            (self.0 >> 16) as u8,
-            (self.0 >> 8) as u8,
-            self.0 as u8,
-        ]
+    #[inline]
+    pub fn to_u32(&self) -> u32 {
+        self.0.to_u32()
     }
 
     pub fn to_string(&self) -> String {
-        unsafe { String::from_utf8_unchecked(self.to_vec()) }
-    }
-
-    pub fn to_int(&self) -> u32 {
-        self.0
+        self.0.to_string()
     }
 
     pub fn is_null(&self) -> bool {
-        self.0 == 0
+        self.to_u32() == 0
     }
 }
 
@@ -64,21 +44,28 @@ impl fmt::Display for ResType {
     }
 }
 
-impl From<&str> for ResType {
-    fn from(value: &str) -> ResType {
-        ResType::from_str(value)
+impl From<FourCharCode> for ResType {
+    fn from(value: FourCharCode) -> ResType {
+        ResType(value)
     }
 }
 
-impl From<u32> for ResType {
-    fn from(value: u32) -> ResType {
-        ResType::from_int(value)
-    }
-}
+// impl<T> From<T> for ResType where T: Into<FourCharCode> {
+//     fn from(value: T) -> ResType {
+//         ResType(value.into())
+//     }
+// }
 
 impl fmt::Debug for ResType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "ResType({:?})", self.to_string())
+    }
+}
+
+#[macro_export]
+macro_rules! res_type {
+    ( $value:literal ) => {
+        $crate::sys::ResType($crate::sys::four_char_code!($value))
     }
 }
 
@@ -109,33 +96,33 @@ pub struct AEBuildError {
 pub type Ptr = *mut c_char;
 pub type Handle = *mut Ptr;
 
-pub const kAECoreSuite: ResType = ResType(0x636f7265);
-pub const kAEGetData: ResType = ResType(0x67657464);
-pub const kAESetData: ResType = ResType(0x73657464);
+pub const kAECoreSuite: ResType = res_type!("core");
+pub const kAEGetData: ResType = res_type!("getd");
+pub const kAESetData: ResType = res_type!("setd");
 
-pub const keyDirectObject: ResType = ResType(0x2d2d2d2d);
+pub const keyDirectObject: ResType = res_type!("----");
 
-pub const typeApplicationBundleID: ResType = ResType(0x62756e64);
-pub const typeNull: ResType = ResType(0x6e756c6c);
-pub const typeBoolean: ResType = ResType(0x626f6f6c);
-pub const typeUnicodeText: ResType = ResType(0x75747874);
-pub const typeChar: ResType = ResType(0x54455854);
-pub const typeVersion: ResType = ResType(0x76657273);
-pub const typeWildCard: ResType = ResType(0x2a2a2a2a);
-pub const typeApplSignature: ResType = ResType(0x7369676e);
-pub const typeEnumerated: ResType = ResType(0x656e756d);
-pub const typeIEEE64BitFloatingPoint: ResType = ResType(0x646f7562);
+pub const typeApplicationBundleID: ResType = res_type!("bund");
+pub const typeNull: ResType = res_type!("null");
+pub const typeBoolean: ResType = res_type!("bool");
+pub const typeUnicodeText: ResType = res_type!("utxt");
+pub const typeChar: ResType = res_type!("TEXT");
+pub const typeVersion: ResType = res_type!("vers");
+pub const typeWildCard: ResType = res_type!("****");
+pub const typeApplSignature: ResType = res_type!("sign");
+pub const typeEnumerated: ResType = res_type!("enum");
+pub const typeIEEE64BitFloatingPoint: ResType = res_type!("doub");
 pub const typeFloat: ResType = typeIEEE64BitFloatingPoint;
 pub const typeLongFloat: ResType = typeIEEE64BitFloatingPoint;
-pub const typeSInt16: ResType = ResType(0x73686f72);
+pub const typeSInt16: ResType = res_type!("shor");
 pub const typeSMInt: ResType = typeSInt16;
 pub const typeShortInteger: ResType = typeSInt16;
-pub const typeSInt32: ResType = ResType(0x6c6f6e67);
+pub const typeSInt32: ResType = res_type!("long");
 pub const typeInteger: ResType = typeSInt32;
 pub const typeLongInteger: ResType = typeSInt32;
-pub const typeSInt64: ResType = ResType(0x636f6d70);
+pub const typeSInt64: ResType = res_type!("comp");
 pub const typeComp: ResType = typeSInt64;
-pub const typeType: ResType = ResType(0x74797065);
+pub const typeType: ResType = res_type!("type");
 
 pub const kAutoGenerateReturnID: i16 = -1;
 pub const kAnyTransactionID: i32 = 0;
@@ -216,7 +203,7 @@ impl Drop for AEDesc {
 
 impl Default for ResType {
     fn default() -> Self {
-        ResType(0)
+        ResType::new(0)
     }
 }
 
