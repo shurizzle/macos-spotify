@@ -1,6 +1,6 @@
 [package]
 name = "macos-spotify"
-version = "0.0.2"
+version = "0.0.3"
 description = "Query and controlling Spotify via Apple Events"
 homepage = "https://github.com/shurizzle/rust-macos-spotify"
 repository = "https://github.com/shurizzle/rust-macos-spotify"
